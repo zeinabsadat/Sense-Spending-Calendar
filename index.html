@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalist Split Calendar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Monica's Pie - Aesthetic Calendar</title>
     <style>
         :root {
             --bg-color: transparent;
@@ -12,8 +11,8 @@
             --text-dim: #7a7a7a;
             --highlight-soft: #ede6dd;
             --highlight-today: #000;
-            --font-accent: 'Dancing Script', cursive;
-            --font-main: 'Inter', sans-serif;
+            --font-serif: 'Georgia', serif;
+            --font-sans: 'Inter', -apple-system, sans-serif;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -33,94 +32,88 @@
             align-items: center;
             height: 100vh;
             background-color: var(--bg-color);
-            font-family: var(--font-main);
+            font-family: var(--font-sans);
             color: var(--text-main);
             overflow: hidden;
         }
 
         .split-container {
             display: grid;
-            grid-template-columns: 1fr 1.2fr; /* Explicit two-column layout */
-            gap: 30px;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             align-items: start;
         }
 
-        /* Left Side: Text Info */
+        /* Left Side */
         .sidebar {
             text-align: left;
             border-right: 1px solid rgba(122, 122, 122, 0.2);
-            padding-right: 20px;
+            padding-right: 25px;
         }
 
         .year-text {
             font-size: 0.9rem;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             color: var(--text-dim);
             margin: 0;
-            text-transform: uppercase;
+            font-family: var(--font-sans);
         }
 
         .month-text {
-            font-family: var(--font-accent);
-            font-size: 3rem;
-            margin: 5px 0 20px 0;
-            line-height: 1;
+            font-family: var(--font-serif); /* Same as Quotes */
+            font-size: 3.5rem;
+            margin: 0px 0 25px 0;
+            font-style: italic;
+            font-weight: normal;
         }
 
-        .event-list {
-            margin-top: 15px;
-        }
+        .event-list { margin-top: 10px; }
 
         .event-row {
             display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
+            gap: 15px;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
         }
 
         .event-num {
             font-weight: 600;
-            color: var(--text-main);
-            min-width: 18px;
+            min-width: 20px;
         }
 
-        .event-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .event-name { font-weight: 400; }
+        .event-info { display: flex; flex-direction: column; }
+        .event-name { font-weight: 500; }
         .event-tag { 
-            font-size: 0.7rem; 
+            font-size: 0.75rem; 
             color: var(--text-dim); 
             font-style: italic;
         }
 
-        /* Right Side: Calendar Grid */
+        /* Right Side */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 12px;
             text-align: center;
         }
 
         .weekday {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--text-dim);
-            padding-bottom: 10px;
+            padding-bottom: 15px;
         }
 
         .date-cell {
             position: relative;
-            height: 28px;
-            width: 28px;
+            height: 32px;
+            width: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             margin: auto;
             z-index: 1;
         }
@@ -128,15 +121,15 @@
         .is-event::after {
             content: '';
             position: absolute;
-            width: 26px;
-            height: 26px;
+            width: 30px;
+            height: 30px;
             background-color: var(--highlight-soft);
             border-radius: 50%;
             z-index: -1;
         }
 
         .is-today {
-            border: 1px solid var(--highlight-today);
+            border: 1.5px solid var(--highlight-today);
             border-radius: 50%;
             font-weight: 600;
         }
@@ -155,13 +148,13 @@
 
     <div class="main-calendar">
         <div class="calendar-grid" id="calendarBoard">
-            <div class="weekday">MO</div>
-            <div class="weekday">TU</div>
-            <div class="weekday">WE</div>
-            <div class="weekday">TH</div>
-            <div class="weekday">FR</div>
-            <div class="weekday">SA</div>
-            <div class="weekday">SU</div>
+            <div class="weekday">MON</div>
+            <div class="weekday">TUE</div>
+            <div class="weekday">WED</div>
+            <div class="weekday =">THU</div>
+            <div class="weekday">FRI</div>
+            <div class="weekday">SAT</div>
+            <div class="weekday">SUN</div>
         </div>
     </div>
 </div>
@@ -170,11 +163,11 @@
     const monthLabels = ["January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December"];
     
-    // Set your events here
+    // Updated March 2026 Events
     const myEvents = [
-        { d: 14, title: "Valentine's", type: "Holiday" },
-        { d: 21, title: "Equinox", type: "Season" },
-        { d: 28, title: "Review", type: "Work" }
+        { d: 20, title: "Nowruz", type: "Persian New Year" },
+        { d: 21, title: "Ramadan Begins", type: "Observed" },
+        { d: 27, title: "Spring Break", type: "Holiday" }
     ];
 
     const today = new Date();
@@ -185,7 +178,6 @@
     document.getElementById('displayMonth').innerText = monthLabels[m];
     document.getElementById('displayYear').innerText = y;
 
-    // Sidebar Events
     const listDiv = document.getElementById('eventItems');
     myEvents.forEach(e => {
         const row = document.createElement('div');
@@ -198,12 +190,10 @@
         listDiv.appendChild(row);
     });
 
-    // Calendar logic
     const first = new Date(y, m, 1).getDay();
     const offset = (first === 0) ? 6 : first - 1;
     const daysCount = new Date(y, m + 1, 0).getDate();
     const board = document.getElementById('calendarBoard');
-
     const markedDays = myEvents.map(ev => ev.d);
 
     for (let i = 0; i < offset; i++) {
@@ -216,10 +206,8 @@
         const cell = document.createElement('div');
         cell.className = 'date-cell';
         cell.innerText = i;
-
         if (i === d) cell.classList.add('is-today');
         else if (markedDays.includes(i)) cell.classList.add('is-event');
-
         board.appendChild(cell);
     }
 </script>
