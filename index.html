@@ -3,159 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aesthetic Calendar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Inter:wght@300&display=swap" rel="stylesheet">
+    <title>Aesthetic Calendar Widget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: transparent;
-            --text-main: #333;
-            --highlight-soft: #ede6dd; /* Beige circles */
-            --highlight-today: #000;    /* Black circle for today */
-            --font-month: 'Dancing Script', cursive;
-            --font-days: 'Inter', sans-serif;
+            --text-main: #37352f;
+            --text-dim: #7a7a7a;
+            --highlight-soft: #ede6dd;
+            --highlight-today: #000;
+            --font-accent: 'Dancing Script', cursive;
+            --font-main: 'Inter', sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-main: #ebebeb;
+                --text-dim: #a0a0a0;
+                --highlight-soft: #3f3e3c;
+                --highlight-today: #fff;
+            }
         }
 
         body {
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
             background-color: var(--bg-color);
-            font-family: var(--font-days);
+            font-family: var(--font-main);
             color: var(--text-main);
+            overflow: hidden;
         }
 
-        .calendar-card {
-            width: 350px;
-            padding: 20px;
-            text-align: center;
+        .container {
+            display: flex;
+            width: 95%;
+            max-width: 650px;
+            gap: 30px;
+            align-items: flex-start;
         }
 
-        .month-name {
-            font-family: var(--font-month);
-            font-size: 3rem;
-            margin-bottom: 5px;
-            font-weight: 500;
+        /* Column 1: Info */
+        .info-col {
+            flex: 1;
+            text-align: left;
+            border-right: 1px solid rgba(122, 122, 122, 0.2);
+            padding-right: 20px;
         }
 
         .year-label {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            color: #666;
-            display: block;
-            text-align: right;
-            padding-right: 20px;
+            font-size: 1rem;
+            letter-spacing: 4px;
+            color: var(--text-dim);
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .month-name {
+            font-family: var(--font-accent);
+            font-size: 3rem;
+            margin: 5px 0 25px 0;
+            line-height: 1;
+        }
+
+        .event-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .event-item {
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .event-date {
+            font-weight: 600;
+            min-width: 20px;
+            color: var(--text-main);
+        }
+
+        .event-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-title {
+            font-weight: 400;
+            color: var(--text-main);
+        }
+
+        .event-type {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        /* Column 2: Calendar Grid */
+        .calendar-col {
+            flex: 1.3;
         }
 
         .days-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 15px 5px;
+            gap: 10px 5px;
+            text-align: center;
         }
 
         .day-header {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             letter-spacing: 1px;
-            font-weight: 400;
-            color: #444;
+            color: var(--text-dim);
+            font-weight: 600;
             padding-bottom: 10px;
         }
 
         .day {
             position: relative;
-            height: 35px;
-            width: 35px;
+            height: 30px;
+            width: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: default;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             margin: auto;
+            z-index: 1;
         }
 
-        /* The Soft Beige Circle (Example days) */
-        .highlight-soft::before {
+        .highlight-soft::after {
             content: '';
             position: absolute;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             background-color: var(--highlight-soft);
             border-radius: 50%;
             z-index: -1;
         }
 
-        /* The Today Circle (Black Outline) */
         .today {
-            border: 1.5px solid var(--highlight-today);
+            border: 1.2px solid var(--highlight-today);
             border-radius: 50%;
             font-weight: 600;
         }
 
         .empty { visibility: hidden; }
-
     </style>
 </head>
 <body>
 
-<div class="calendar-card">
-    <div class="month-name" id="monthName">Month</div>
-    <span class="year-label" id="yearLabel">2026</span>
-    
-    <div class="days-grid" id="daysGrid">
-        <div class="day-header">MON</div>
-        <div class="day-header">TUE</div>
-        <div class="day-header">WED</div>
-        <div class="day-header">THU</div>
-        <div class="day-header">FRI</div>
-        <div class="day-header">SAT</div>
-        <div class="day-header">SUN</div>
+<div class="container">
+    <div class="info-col">
+        <p class="year-label" id="yearLabel"></p>
+        <h1 class="month-name" id="monthName"></h1>
+        <div class="event-list" id="eventList">
+            </div>
+    </div>
+
+    <div class="calendar-col">
+        <div class="days-grid" id="daysGrid">
+            <div class="day-header">MON</div>
+            <div class="day-header">TUE</div>
+            <div class="day-header">WED</div>
+            <div class="day-header">THU</div>
+            <div class="day-header">FRI</div>
+            <div class="day-header">SAT</div>
+            <div class="day-header">SUN</div>
         </div>
+    </div>
 </div>
 
 <script>
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"];
+    const months = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
     
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-    const todayDate = now.getDate();
+    // Edit your events here
+    const events = [
+        { date: 14, title: "Valentine's Day", type: "Celebration" },
+        { date: 20, title: "Spring Equinox", type: "Season Start" },
+        { date: 28, title: "Project Deadline", type: "Work" }
+    ];
 
-    document.getElementById('monthName').innerText = monthNames[currentMonth];
-    document.getElementById('yearLabel').innerText = currentYear;
+    const d = new Date();
+    const curMonth = d.getMonth();
+    const curYear = d.getFullYear();
+    const curDay = d.getDate();
 
-    const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
-    // Adjust for Monday start (0=Sun to 0=Mon)
-    const startPos = (firstDayIndex === 0) ? 6 : firstDayIndex - 1;
-    
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const grid = document.getElementById('daysGrid');
+    document.getElementById('monthName').innerText = months[curMonth];
+    document.getElementById('yearLabel').innerText = curYear;
 
-    // Sample highlight days (like in your image)
-    const softHighlights = [3, 12, 13, 14, 24]; 
+    // Build Events List
+    const listEl = document.getElementById('eventList');
+    events.forEach(e => {
+        const item = document.createElement('div');
+        item.className = 'event-item';
+        item.innerHTML = `
+            <span class="event-date">${e.date}</span>
+            <div class="event-details">
+                <span class="event-title">${e.title}</span>
+                <span class="event-type">${e.type}</span>
+            </div>`;
+        listEl.appendChild(item);
+    });
 
-    // Add empty slots for first week
-    for (let x = 0; x < startPos; x++) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.classList.add('day', 'empty');
-        grid.appendChild(emptyDiv);
+    // Build Calendar Grid
+    const firstDay = new Date(curYear, curMonth, 1).getDay();
+    const startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+    const totalDays = new Date(curYear, curMonth + 1, 0).getDate();
+    const gridEl = document.getElementById('daysGrid');
+
+    const eventDays = events.map(ev => ev.date);
+
+    for (let i = 0; i < startOffset; i++) {
+        const div = document.createElement('div');
+        div.className = 'day empty';
+        gridEl.appendChild(div);
     }
 
-    // Add actual days
-    for (let i = 1; i <= daysInMonth; i++) {
-        const dayDiv = document.createElement('div');
-        dayDiv.classList.add('day');
-        dayDiv.innerText = i;
+    for (let day = 1; day <= totalDays; day++) {
+        const div = document.createElement('div');
+        div.className = 'day';
+        div.innerText = day;
 
-        if (i === todayDate) {
-            dayDiv.classList.add('today');
-        } else if (softHighlights.includes(i)) {
-            dayDiv.classList.add('highlight-soft');
-        }
+        if (day === curDay) div.classList.add('today');
+        else if (eventDays.includes(day)) div.classList.add('highlight-soft');
 
-        grid.appendChild(dayDiv);
+        gridEl.appendChild(div);
     }
 </script>
 
