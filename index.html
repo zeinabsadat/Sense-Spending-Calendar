@@ -3,68 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Aesthetic Calendar - March 2026</title>
+    <title>Global Aesthetic Calendar - Forest Palette</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: transparent;
-            --text-main: #37352f;
-            --text-dim: #7a7a7a;
-            --highlight-soft: #ede6dd;
-            --highlight-today: #000;
+            /* Monica's Pie - Forest Palette Colors */
+            --parchment: #F5F0E8;
+            --sand: #E8E0CC;
+            --warm-taupe: #8A7A5A;
+            --sage-green: #4A6741;
+            --forest: #2C3B2A;
+
+            /* LIGHT MODE Assignment */
+            --bg-color: transparent; /* Seamless with Notion background */
+            --text-main: var(--forest); /* Main text (days, headers) */
+            --text-dim: var(--warm-taupe); /* Faded text (year, tag) */
+            
+            --highlight-soft: var(--sand); /* Beige circles for events */
+            --highlight-today: var(--sage-green); /* Sage border for today */
+            
+            --border-line: var(--sand); /* Separation line */
+            
+            /* Classy book-style font */
             --font-serif: 'Georgia', serif;
             --font-sans: 'Inter', -apple-system, sans-serif;
         }
 
+        /* DARK MODE - Automatically detects and adapts */
         @media (prefers-color-scheme: dark) {
             :root {
-                --text-main: #ebebeb;
-                --text-dim: #a0a0a0;
-                --highlight-soft: #3f3e3c;
-                --highlight-today: #fff;
+                /* Invert for visibility on dark background */
+                --bg-color: transparent;
+                --text-main: var(--parchment); /* Standard white-ish in dark mode */
+                --text-dim: var(--warm-taupe); /* Faded beige */
+                
+                --highlight-soft: #3f3e3c; /* Notion's faded background for blocks */
+                --highlight-today: var(--sage-green); /* Sage green still works well */
+                
+                --border-line: #3f3e3c; /* Match block border line */
             }
         }
 
         body {
             margin: 0;
-            /* ایجاد فاصله از هر گوشه برای اینکه به دیواره‌های نوشن نچسبد */
+            /* مارجین از هر طرف برای اینکه در نوشن به دیواره‌ها نچسبد */
             padding: 40px; 
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             background-color: var(--bg-color);
             font-family: var(--font-sans);
             color: var(--text-main);
+            overflow: hidden;
             box-sizing: border-box;
         }
 
         .split-container {
             display: grid;
             grid-template-columns: 1fr 1.3fr;
-            gap: 50px; /* افزایش فاصله بین دو ستون */
+            gap: 40px; /* افزایش فاصله بین دو ستون برای ظاهر خلوت‌تر */
             width: 100%;
-            max-width: 600px; /* محدود کردن عرض برای تمرکز در وسط */
+            max-width: 650px;
             align-items: start;
         }
 
+        /* Left Side: Text Info */
         .sidebar {
             text-align: left;
             border-right: 1px solid rgba(122, 122, 122, 0.2);
-            padding-right: 30px;
+            padding-right: 25px;
         }
 
         .year-text {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             letter-spacing: 4px;
             color: var(--text-dim);
             margin: 0;
+            font-weight: 300;
         }
 
         .month-text {
             font-family: var(--font-serif);
-            font-size: 3.2rem;
-            margin: 8px 0 30px 0;
+            font-size: 3.5rem;
+            margin: 8px 0 25px 0;
             font-style: italic;
             font-weight: normal;
             line-height: 1;
@@ -74,52 +96,64 @@
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
-        .event-num { font-weight: 600; min-width: 20px; }
-        .event-info { display: flex; flex-direction: column; }
-        .event-name { font-weight: 500; }
-        .event-tag { font-size: 0.7rem; color: var(--text-dim); font-style: italic; }
+        .event-num { 
+            font-weight: 600; 
+            min-width: 20px;
+            color: var(--text-main);
+        }
 
+        .event-info { display: flex; flex-direction: column; }
+        .event-name { font-weight: 500; color: var(--text-main); }
+        .event-tag { 
+            font-size: 0.75rem; 
+            color: var(--text-dim); 
+            font-style: italic;
+        }
+
+        /* Right Side: Calendar Grid */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 15px 10px;
+            gap: 12px;
             text-align: center;
         }
 
         .weekday {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 600;
             color: var(--text-dim);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
         .date-cell {
             position: relative;
-            height: 30px;
-            width: 30px;
+            height: 32px;
+            width: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             z-index: 1;
             margin: auto;
         }
 
+        /* Beige Circle (Event Days) */
         .is-event::after {
             content: '';
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             background-color: var(--highlight-soft);
             border-radius: 50%;
             z-index: -1;
         }
 
+        /* Sage Circle (Today) */
         .is-today {
-            border: 1.2px solid var(--highlight-today);
+            border: 1.5px solid var(--highlight-today);
             border-radius: 50%;
             font-weight: 600;
         }
