@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aesthetic Calendar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Inter:wght@300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: transparent;
+            --text-main: #333;
+            --highlight-soft: #ede6dd; /* Beige circles */
+            --highlight-today: #000;    /* Black circle for today */
+            --font-month: 'Dancing Script', cursive;
+            --font-days: 'Inter', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: var(--font-days);
+            color: var(--text-main);
+        }
+
+        .calendar-card {
+            width: 350px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .month-name {
+            font-family: var(--font-month);
+            font-size: 3rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .year-label {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #666;
+            display: block;
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px 5px;
+        }
+
+        .day-header {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+            color: #444;
+            padding-bottom: 10px;
+        }
+
+        .day {
+            position: relative;
+            height: 35px;
+            width: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            font-size: 0.95rem;
+            margin: auto;
+        }
+
+        /* The Soft Beige Circle (Example days) */
+        .highlight-soft::before {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background-color: var(--highlight-soft);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        /* The Today Circle (Black Outline) */
+        .today {
+            border: 1.5px solid var(--highlight-today);
+            border-radius: 50%;
+            font-weight: 600;
+        }
+
+        .empty { visibility: hidden; }
+
+    </style>
+</head>
+<body>
+
+<div class="calendar-card">
+    <div class="month-name" id="monthName">Month</div>
+    <span class="year-label" id="yearLabel">2026</span>
+    
+    <div class="days-grid" id="daysGrid">
+        <div class="day-header">MON</div>
+        <div class="day-header">TUE</div>
+        <div class="day-header">WED</div>
+        <div class="day-header">THU</div>
+        <div class="day-header">FRI</div>
+        <div class="day-header">SAT</div>
+        <div class="day-header">SUN</div>
+        </div>
+</div>
+
+<script>
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+    
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    const todayDate = now.getDate();
+
+    document.getElementById('monthName').innerText = monthNames[currentMonth];
+    document.getElementById('yearLabel').innerText = currentYear;
+
+    const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+    // Adjust for Monday start (0=Sun to 0=Mon)
+    const startPos = (firstDayIndex === 0) ? 6 : firstDayIndex - 1;
+    
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const grid = document.getElementById('daysGrid');
+
+    // Sample highlight days (like in your image)
+    const softHighlights = [3, 12, 13, 14, 24]; 
+
+    // Add empty slots for first week
+    for (let x = 0; x < startPos; x++) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.classList.add('day', 'empty');
+        grid.appendChild(emptyDiv);
+    }
+
+    // Add actual days
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.classList.add('day');
+        dayDiv.innerText = i;
+
+        if (i === todayDate) {
+            dayDiv.classList.add('today');
+        } else if (softHighlights.includes(i)) {
+            dayDiv.classList.add('highlight-soft');
+        }
+
+        grid.appendChild(dayDiv);
+    }
+</script>
+
+</body>
+</html>
