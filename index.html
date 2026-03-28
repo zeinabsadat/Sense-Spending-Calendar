@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monica's Pie - March 2026</title>
+    <title>Global Aesthetic Calendar - March 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: transparent;
@@ -71,7 +72,7 @@
         .event-row {
             display: flex;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             font-size: 0.85rem;
         }
 
@@ -144,16 +145,16 @@
 </div>
 
 <script>
-    // March 2026 Events
-    const marchEvents = [
-        { d: 20, title: "Nowruz", type: "New Year" },
-        { d: 21, title: "Ramadan Begins", type: "Observed" },
-        { d: 27, title: "Spring Break", type: "Holiday" }
+    // Global/International Events for March 2026
+    const globalEvents = [
+        { d: 8,  title: "Women's Day", type: "International" },
+        { d: 17, title: "St. Patrick's", type: "Cultural" },
+        { d: 20, title: "Spring Equinox", type: "Global Season" },
+        { d: 22, title: "World Water Day", type: "UN Observance" }
     ];
 
-    // Sidebar
     const listDiv = document.getElementById('eventItems');
-    marchEvents.forEach(e => {
+    globalEvents.forEach(e => {
         const row = document.createElement('div');
         row.className = 'event-row';
         row.innerHTML = `<span class="event-num">${e.d}</span>
@@ -164,15 +165,15 @@
         listDiv.appendChild(row);
     });
 
-    // Calendar
     const board = document.getElementById('calendarBoard');
     const today = new Date();
+    // Logic to highlight today only if it's March 2026
     const curDay = (today.getMonth() === 2 && today.getFullYear() === 2026) ? today.getDate() : -1;
     
-    // March 1st 2026 is Sunday (getDay()=0) -> Offset should be 6
+    // March 1st, 2026 is Sunday. In a MON-start grid, offset is 6.
     const offset = 6; 
     const daysInMarch = 31;
-    const markedDays = marchEvents.map(ev => ev.d);
+    const markedDays = globalEvents.map(ev => ev.d);
 
     for (let i = 0; i < offset; i++) {
         const cell = document.createElement('div');
